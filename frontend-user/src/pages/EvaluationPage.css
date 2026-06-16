@@ -1,0 +1,118 @@
+/* ========== 返回按钮区域 ========== */
+.evaluation-back-bar {
+  margin-bottom: 16px;
+}
+
+.back-button {
+  padding-left: 0;
+  font-size: 14px;
+  color: #1677ff;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  color: #4096ff;
+  padding-left: 4px;
+}
+
+.back-button .anticon {
+  margin-right: 4px;
+}
+
+/* ========== 课程信息区域样式 ========== */
+
+/* 课程信息卡片区域 */
+.course-info-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  padding: unset;
+  border-radius: 12px;
+  border: 1px solid #e0e6ed;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* 课程信息标题样式 - 深灰色、较小字号 */
+.course-info-card .info-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #8c8c8c;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 课程信息内容样式 - 深色、较大字号、醒目 */
+.course-info-card .info-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1677ff;
+  background-color: #fff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #d9e4f5;
+}
+
+/* FormRender 默认样式覆盖 - 课程信息字段 */
+.evaluation-page .ant-form-item-label > label {
+  font-weight: 600;
+  color: #595959;
+  font-size: 14px;
+}
+
+/* 只读输入框样式 - 蓝色高亮 */
+.evaluation-page .ant-input[readonly],
+.evaluation-page .ant-input-disabled,
+.evaluation-page .ant-input[disabled] {
+  background-color: #f0f7ff !important;
+  border: 1px solid #bae0ff !important;
+  color: #1677ff !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  cursor: default !important;
+  opacity: 1 !important;
+}
+
+/* 教学评分区域样式 */
+.evaluation-page .ant-rate {
+  font-size: 24px;
+}
+
+/* 各区块标题样式 */
+.evaluation-page .fr-field-object > .ant-form-item-label > label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #262626;
+  border-left: 4px solid #1677ff;
+  padding-left: 12px;
+}
+
+/* 区块描述样式 */
+.evaluation-page .ant-form-item-extra {
+  color: #8c8c8c;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* 修复 label for 属性问题 - 确保 label 正确关联到表单字段 */
+.evaluation-page .ant-form-item-label > label {
+  cursor: pointer;
+}
+
+.evaluation-page .ant-form-item-control-input {
+  position: relative;
+}
+
+/* 为 Rate 组件添加正确的 id 关联 */
+.evaluation-page .ant-rate {
+  display: inline-block;
+}
+
+/* 确保 TextArea 有正确的 id */
+.evaluation-page .ant-input {
+  position: relative;
+}
+
+/* 通过 JavaScript 动态修复 label for 属性（如果需要） */
+.evaluation-page .ant-form-item-label label[for] {
+  /* 确保 label 的 for 属性指向正确的元素 */
+}

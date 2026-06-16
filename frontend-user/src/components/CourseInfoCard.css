@@ -1,0 +1,126 @@
+/* 课程信息卡片容器 */
+.course-info-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  padding: 28px;
+  margin-bottom: 24px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.course-info-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* 课程信息头部区域 */
+.course-info-header {
+  margin-bottom: 16px;
+}
+
+.course-info-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 标题左侧装饰条 */
+.course-info-title-accent {
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(135deg, #1677ff 0%, #69b1ff 100%);
+  border-radius: 2px;
+}
+
+/* 课程信息主标题 */
+.course-info-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #262626;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+/* 课程信息项容器 */
+.course-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.course-info-item:hover {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f4ff 100%);
+  border-color: #bae0ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.1);
+}
+
+/* 图标容器 */
+.course-info-item-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #1677ff 0%, #69b1ff 100%);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 20px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(22, 119, 255, 0.2);
+}
+
+/* 内容区域 */
+.course-info-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* 课程信息标签（标题） */
+.course-info-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #8c8c8c;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+/* 课程信息内容（值） */
+.course-info-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* 响应式设计 */
+@media (max-width: 576px) {
+  .course-info-card {
+    padding: 20px;
+  }
+  
+  .course-info-item {
+    padding: 16px;
+  }
+  
+  .course-info-item-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+  
+  .course-info-value {
+    font-size: 15px;
+  }
+}

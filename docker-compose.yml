@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  frontend-user:
+    build: 
+      context: ./frontend-user
+      dockerfile: Dockerfile
+    container_name: student-evaluation-frontend
+    ports:
+      - "8081:80"
+    restart: always
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
