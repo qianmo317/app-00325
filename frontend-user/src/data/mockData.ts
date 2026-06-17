@@ -24,6 +24,19 @@ export interface Teacher {
   department: string;
 }
 
+export interface EvaluationData {
+  ratings: {
+    teachingAttitude: number;
+    teachingContent: number;
+    teachingMethod: number;
+    interaction: number;
+  };
+  feedback: {
+    comments: string;
+  };
+  submittedAt?: string;
+}
+
 export interface Course {
   id: string;
   name: string;
@@ -33,6 +46,7 @@ export interface Course {
   credits: number;
   type: '必修' | '选修' | '公选';
   evaluated: boolean;
+  evaluationData?: EvaluationData;
 }
 
 // 模拟教师数据
