@@ -24,6 +24,19 @@ export interface Teacher {
   department: string;
 }
 
+// 评价数据接口（教学评分 + 主观评价）
+export interface EvaluationData {
+  ratings: {
+    teachingAttitude: number;
+    teachingContent: number;
+    teachingMethod: number;
+    interaction: number;
+  };
+  feedback: {
+    comments: string;
+  };
+}
+
 export interface Course {
   id: string;
   name: string;
@@ -33,6 +46,8 @@ export interface Course {
   credits: number;
   type: '必修' | '选修' | '公选';
   evaluated: boolean;
+  // 已提交的评价数据（evaluated 为 true 时存在）
+  evaluation?: EvaluationData;
 }
 
 // 模拟教师数据
