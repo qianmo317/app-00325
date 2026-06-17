@@ -4,7 +4,7 @@ import MainLayout from './components/MainLayout';
 import EvaluationPage from './pages/EvaluationPage';
 import CourseListPage from './pages/CourseListPage';
 import LoginPage from './pages/LoginPage';
-import { courses as initialCourses, Course, User } from './data/mockData';
+import { courses as initialCourses, Course, User, EvaluationData } from './data/mockData';
 
 // localStorage 键名
 const STORAGE_KEYS = {
@@ -89,12 +89,18 @@ function AppContent() {
     setSelectedCourse(null);
   };
 
-  // 评价提交成功后更新课程状态
-  const handleSubmitSuccess = (courseId: string) => {
+  // 评价提交成功后更新课程状态和评价数据
+  const handleSubmitSuccess = (courseId: string, evaluationData: EvaluationData) => {
     setCourses(prevCourses =>
       prevCourses.map(course =>
-        course.id === courseId ? { ...course, evaluated: true } : course
+        course.id === courseId ? { ...course, evaluated: true, evaluationData } : course
       )
+    );
+    // 更新 selectedCourse 以便在查看页面显示最新数据
+    setSelectedCourse(prev =>
+      prev && prev.id === courseId
+        ? { ...prev, evaluated: true, evaluationData }
+        : prev
     );
   };
 

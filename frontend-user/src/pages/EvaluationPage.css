@@ -116,3 +116,30 @@
 .evaluation-page .ant-form-item-label label[for] {
   /* 确保 label 的 for 属性指向正确的元素 */
 }
+
+/* ========== 评价详情页样式 ========== */
+.evaluation-detail-card {
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+}
+
+.evaluation-detail-card .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.evaluation-detail-card .ant-descriptions-item-label {
+  width: 240px;
+  background-color: #fafafa;
+  font-weight: 500;
+}
+
+.evaluation-detail-card .ant-rate {
+  font-size: 20px;
+}
+
+.evaluation-detail-card .ant-descriptions-item-content {
+  display: flex;
+  align-items: center;
+}
