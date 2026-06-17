@@ -1,25 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import FormRender, { useForm } from 'form-render';
-import { Button, Result, Typography, App } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Button, Result, Typography, App, Card, Rate, Divider } from 'antd';
+import { ArrowLeftOutlined, EditOutlined } from '@ant-design/icons';
 import { evaluationSchema } from '../schema/evaluationSchema';
 import CourseInfoCard from '../components/CourseInfoCard';
-import { Course } from '../data/mockData';
+import { Course, EvaluationData } from '../data/mockData';
+import { PageMode } from '../App';
 import './EvaluationPage.css';
 
-const { Title } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 interface EvaluationPageProps {
   course: Course;
+  mode: PageMode;
   onBack: () => void;
-  onSubmitSuccess: (courseId: string) => void;
+  onSubmitSuccess: (courseId: string, evaluationData: EvaluationData) => void;
+  onSwitchToEdit: () => void;
+  onSwitchToView: () => void;
 }
 
-const EvaluationPage: React.FC<EvaluationPageProps> = ({ course, onBack, onSubmitSuccess }) => {
+const ratingLabels: Record<string, string> = {
+  teachingAttitude: '教学态度',
+  teachingContent: '教学内容',
+  teachingMethod: '教学方法',
+  interaction: '课堂互动',
+};
+
+const EvaluationPage: React.FC<EvaluationPageProps> = ({
+  course,
+  mode,
+  onBack,
+  onSubmitSuccess,
+  onSwitchToEdit,
+  onSwitchToView,
+}) => {
   const { message } = App.useApp();
   const form = useForm();
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const isViewMode = mode === 'view';
+  const isEditMode = mode === 'edit';
+
+  const formInitialValues = isEditMode && course.evaluationData
+    ? {
+        ratings: course.evaluationData.ratings,
+        feedback: course.evaluationData.feedback,
+      }
+    : undefined;
 
   // 从 course 对象构建 courseInfo
   const courseInfo = {
@@ -108,34 +136,23 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ course, onBack, onSubmi
     };
   }, []);
 
-  /**
-   * 表单提交处理函数
-   * 
-   * 注意：当前版本为前端演示版本，使用 setTimeout 模拟 API 调用延迟（1.5秒）。
-   * 实际项目中需要替换为真实的 API 调用。
-   * 
-   * 接入真实 API 示例：
-   * ```typescript
-   * const response = await axios.post('/api/evaluation/submit', values);
-   * ```
-   * 
-   * @param values - 表单提交的值
-   */
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      // TODO: 替换为真实的 API 调用
-      // 当前使用 setTimeout 模拟 API 调用延迟（1.5秒）
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      // 开发环境日志记录（生产环境应使用专业的日志服务）
+
+      const evaluationData: EvaluationData = {
+        ratings: values.ratings,
+        feedback: values.feedback,
+        submittedAt: new Date().toISOString(),
+      };
+
       console.log('Form values:', { courseId: course.id, ...values });
-      
-      message.success('提交成功！感谢您的评价');
-      onSubmitSuccess(course.id);
+
+      message.success(isEditMode ? '修改成功！评价已更新' : '提交成功！感谢您的评价');
+      onSubmitSuccess(course.id, evaluationData);
       setSubmitted(true);
     } catch (error) {
-      // 错误处理：生产环境应记录到错误追踪服务（如 Sentry）
       console.error('Evaluation submission error:', error);
       message.error('提交失败，请稍后重试');
     } finally {
@@ -147,7 +164,7 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ course, onBack, onSubmi
     return (
       <Result
         status="success"
-        title="评价已提交"
+        title={isEditMode ? '评价已更新' : '评价已提交'}
         subTitle={`感谢您对「${course.name}」课程的评价，您的反馈将帮助教师改进教学质量。`}
         extra={[
           <Button type="primary" key="back" onClick={onBack}>
@@ -158,56 +175,170 @@ const EvaluationPage: React.FC<EvaluationPageProps> = ({ course, onBack, onSubmi
     );
   }
 
-  return (
-    <div className="evaluation-page">
-      {/* 返回按钮 */}
-      <div className="evaluation-back-bar">
-        <Button 
-          type="link" 
-          icon={<ArrowLeftOutlined />} 
-          onClick={onBack}
-          className="back-button"
-        >
-          返回课程列表
-        </Button>
-      </div>
+  const pageTitle = isViewMode
+    ? '评价详情查看'
+    : isEditMode
+    ? '修改课程评价'
+    : '课程教学质量评价';
 
-      <div style={{ marginBottom: 24, textAlign: 'center' }}>
-        <Title level={3}>课程教学质量评价</Title>
-        <Typography.Text type="secondary">
-          请客观、公正地对本学期课程进行评价，您的评价结果将匿名处理。
-        </Typography.Text>
-      </div>
+  const pageDesc = isViewMode
+    ? '以下是您对本课程的评价内容'
+    : isEditMode
+    ? '您可以修改之前的评价内容，修改后提交将覆盖原有评价'
+    : '请客观、公正地对本学期课程进行评价，您的评价结果将匿名处理。';
 
-      <CourseInfoCard courseInfo={courseInfo} />
-      
+  const renderViewMode = () => {
+    const data = course.evaluationData;
+
+    if (!data) {
+      return (
+        <div className="evaluation-view">
+          <Card className="view-empty-card">
+            <div className="view-empty-content">
+              <div className="view-empty-icon">📋</div>
+              <Title level={5} style={{ marginTop: 12, marginBottom: 8 }}>
+                暂无评价详情
+              </Title>
+              <Text type="secondary">
+                该课程已完成评价，但历史评价数据未保存。您可以点击下方按钮重新填写评价。
+              </Text>
+            </div>
+          </Card>
+
+          <div style={{ marginTop: 24, display: 'flex', justifyContent: 'center', gap: 16 }}>
+            <Button size="large" style={{ width: 160, height: 40 }} onClick={onBack}>
+              返回列表
+            </Button>
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              size="large"
+              style={{ width: 160, height: 40 }}
+              onClick={onSwitchToEdit}
+            >
+              填写评价
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    const avgRating =
+      Object.values(data.ratings).reduce((sum, r) => sum + r, 0) /
+      Object.values(data.ratings).length;
+
+    return (
+      <div className="evaluation-view">
+        <Card className="view-ratings-card">
+          <div className="view-ratings-header">
+            <div className="view-avg-rating">
+              <span className="avg-score">{avgRating.toFixed(1)}</span>
+              <span className="avg-label">综合评分</span>
+            </div>
+            <Rate disabled allowHalf value={avgRating} className="avg-rate" />
+          </div>
+          <Divider />
+          <div className="rating-items">
+            {Object.entries(data.ratings).map(([key, value]) => (
+              <div key={key} className="rating-item">
+                <span className="rating-label">{ratingLabels[key] || key}</span>
+                <Rate disabled value={value} />
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="view-feedback-card" title="意见与建议">
+          <Paragraph className="feedback-text">{data.feedback.comments}</Paragraph>
+          <div className="submitted-time">
+            <Text type="secondary">
+              提交时间：{new Date(data.submittedAt).toLocaleString('zh-CN')}
+            </Text>
+          </div>
+        </Card>
+
+        <div style={{ marginTop: 24, display: 'flex', justifyContent: 'center', gap: 16 }}>
+          <Button size="large" style={{ width: 160, height: 40 }} onClick={onBack}>
+            返回列表
+          </Button>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            size="large"
+            style={{ width: 160, height: 40 }}
+            onClick={onSwitchToEdit}
+          >
+            修改评价
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderFormMode = () => (
+    <>
       <FormRender
         form={form}
         schema={evaluationSchema as any}
         onFinish={onFinish}
         layout="vertical"
         footer={false}
+        initialValues={formInitialValues}
       />
-      
+
       <div style={{ marginTop: 24, display: 'flex', justifyContent: 'center', gap: 16 }}>
-        <Button 
-          onClick={() => form.resetFields()} 
-          size="large" 
+        <Button
+          onClick={() => form.resetFields()}
+          size="large"
           style={{ width: 160, height: 40 }}
           disabled={loading}
         >
           重置
         </Button>
-        <Button 
-          type="primary" 
-          onClick={form.submit} 
-          loading={loading} 
-          size="large" 
+        <Button
+          type="primary"
+          onClick={form.submit}
+          loading={loading}
+          size="large"
           style={{ width: 160, height: 40 }}
         >
-          提交评价
+          {isEditMode ? '保存修改' : '提交评价'}
         </Button>
       </div>
+    </>
+  );
+
+  return (
+    <div className="evaluation-page">
+      <div className="evaluation-back-bar">
+        <Button
+          type="link"
+          icon={<ArrowLeftOutlined />}
+          onClick={onBack}
+          className="back-button"
+        >
+          返回课程列表
+        </Button>
+        {isEditMode && (
+          <Button
+            type="link"
+            onClick={onSwitchToView}
+            className="back-button"
+            style={{ marginLeft: 'auto' }}
+          >
+            取消修改
+          </Button>
+        )}
+      </div>
+
+      <div style={{ marginBottom: 24, textAlign: 'center' }}>
+        <Title level={3}>{pageTitle}</Title>
+        <Typography.Text type="secondary">{pageDesc}</Typography.Text>
+      </div>
+
+      <CourseInfoCard courseInfo={courseInfo} />
+
+      {isViewMode ? renderViewMode() : renderFormMode()}
     </div>
   );
 };
