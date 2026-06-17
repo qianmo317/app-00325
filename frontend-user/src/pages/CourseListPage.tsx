@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Card, List, Tag, Avatar, Badge, Empty, Typography, Progress } from 'antd';
-import { BookOutlined, UserOutlined, ClockCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { BookOutlined, UserOutlined, ClockCircleOutlined, CheckCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { Course, getCourseTypeColor } from '../data/mockData';
 import './CourseListPage.css';
 
@@ -34,9 +34,9 @@ const CourseListPage: React.FC<CourseListPageProps> = ({ courses, onSelectCourse
       {/* 页面标题和进度 */}
       <div className="course-list-header">
         <div className="course-list-title-section">
-          <Title level={3}>待评教课程</Title>
+          <Title level={3}>我的课程评价</Title>
           <Text type="secondary">
-            请对本学期所修课程进行教学质量评价，您的评价将帮助教师改进教学。
+            请对本学期所修课程进行教学质量评价，已评价的课程可查看或修改。
           </Text>
         </div>
         
@@ -74,8 +74,8 @@ const CourseListPage: React.FC<CourseListPageProps> = ({ courses, onSelectCourse
               >
                 <Card
                   className={`course-card ${course.evaluated ? 'evaluated' : ''}`}
-                  hoverable={!course.evaluated}
-                  onClick={() => !course.evaluated && onSelectCourse(course)}
+                  hoverable
+                  onClick={() => onSelectCourse(course)}
                 >
                   <div className="course-card-content">
                     {/* 课程基本信息 */}
@@ -115,11 +115,16 @@ const CourseListPage: React.FC<CourseListPageProps> = ({ courses, onSelectCourse
                     </div>
 
                     {/* 操作按钮 */}
-                    {!course.evaluated && (
-                      <div className="course-action">
+                    <div className="course-action">
+                      {course.evaluated ? (
+                        <span className="action-text evaluated-action">
+                          <EyeOutlined style={{ marginRight: 4 }} />
+                          点击查看评价 →
+                        </span>
+                      ) : (
                         <span className="action-text">点击进行评价 →</span>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </Card>
               </Badge.Ribbon>
