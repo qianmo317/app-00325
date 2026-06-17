@@ -4,7 +4,9 @@ import MainLayout from './components/MainLayout';
 import EvaluationPage from './pages/EvaluationPage';
 import CourseListPage from './pages/CourseListPage';
 import LoginPage from './pages/LoginPage';
-import { courses as initialCourses, Course, User } from './data/mockData';
+import { courses as initialCourses, Course, User, EvaluationData } from './data/mockData';
+
+export type PageMode = 'new' | 'view' | 'edit';
 
 // localStorage 键名
 const STORAGE_KEYS = {
@@ -42,6 +44,8 @@ function AppContent() {
   const [courses, setCourses] = useState<Course[]>(getInitialCourses);
   // 当前选中的课程
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  // 评价页面模式：新建、查看、编辑
+  const [pageMode, setPageMode] = useState<PageMode>('new');
 
   // 同步用户状态到 localStorage
   useEffect(() => {
@@ -71,6 +75,7 @@ function AppContent() {
   const handleLogout = () => {
     setUser(null);
     setSelectedCourse(null);
+    setPageMode('new');
     // 清除 localStorage 中的用户数据
     localStorage.removeItem(STORAGE_KEYS.USER);
     localStorage.removeItem(STORAGE_KEYS.COURSES);
@@ -79,21 +84,35 @@ function AppContent() {
     message.success('已成功退出登录');
   };
 
-  // 选择课程进行评价
+  // 选择课程进行评价或查看
   const handleSelectCourse = (course: Course) => {
     setSelectedCourse(course);
+    setPageMode(course.evaluated ? 'view' : 'new');
   };
 
   // 返回课程列表
   const handleBack = () => {
     setSelectedCourse(null);
+    setPageMode('new');
   };
 
-  // 评价提交成功后更新课程状态
-  const handleSubmitSuccess = (courseId: string) => {
+  // 切换到编辑模式
+  const handleSwitchToEdit = () => {
+    setPageMode('edit');
+  };
+
+  // 切换回查看模式
+  const handleSwitchToView = () => {
+    setPageMode('view');
+  };
+
+  // 评价提交成功后更新课程状态和评价数据
+  const handleSubmitSuccess = (courseId: string, evaluationData: EvaluationData) => {
     setCourses(prevCourses =>
       prevCourses.map(course =>
-        course.id === courseId ? { ...course, evaluated: true } : course
+        course.id === courseId
+          ? { ...course, evaluated: true, evaluationData }
+          : course
       )
     );
   };
@@ -103,8 +122,11 @@ function AppContent() {
       {selectedCourse ? (
         <EvaluationPage
           course={selectedCourse}
+          mode={pageMode}
           onBack={handleBack}
           onSubmitSuccess={handleSubmitSuccess}
+          onSwitchToEdit={handleSwitchToEdit}
+          onSwitchToView={handleSwitchToView}
         />
       ) : (
         <CourseListPage

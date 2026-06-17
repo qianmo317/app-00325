@@ -116,3 +116,114 @@
 .evaluation-page .ant-form-item-label label[for] {
   /* 确保 label 的 for 属性指向正确的元素 */
 }
+
+/* ========== 查看模式样式 ========== */
+.evaluation-view {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.view-empty-card {
+  text-align: center;
+  border-radius: 12px;
+  border: 1px dashed #d9d9d9;
+  background: #fafafa;
+}
+
+.view-empty-card .ant-card-body {
+  padding: 48px 24px;
+}
+
+.view-empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.view-empty-icon {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.view-ratings-card,
+.view-feedback-card {
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+}
+
+.view-ratings-card .ant-card-body {
+  padding: 24px;
+}
+
+.view-ratings-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.view-avg-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.avg-score {
+  font-size: 48px;
+  font-weight: 700;
+  color: #fa8c16;
+  line-height: 1;
+}
+
+.avg-label {
+  font-size: 13px;
+  color: #8c8c8c;
+}
+
+.avg-rate {
+  font-size: 28px;
+}
+
+.rating-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rating-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.rating-label {
+  font-size: 14px;
+  color: #595959;
+  font-weight: 500;
+}
+
+.view-feedback-card .ant-card-body {
+  padding: 20px 24px;
+}
+
+.feedback-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #262626;
+  margin-bottom: 16px;
+  white-space: pre-wrap;
+}
+
+.submitted-time {
+  text-align: right;
+  padding-top: 12px;
+  border-top: 1px dashed #e8e8e8;
+}
+
+/* 返回按钮区域 flex 布局 */
+.evaluation-back-bar {
+  display: flex;
+  align-items: center;
+}
