@@ -4,7 +4,7 @@ import MainLayout from './components/MainLayout';
 import EvaluationPage from './pages/EvaluationPage';
 import CourseListPage from './pages/CourseListPage';
 import LoginPage from './pages/LoginPage';
-import { courses as initialCourses, Course, User } from './data/mockData';
+import { courses as initialCourses, Course, User, EvaluationData } from './data/mockData';
 
 // localStorage 键名
 const STORAGE_KEYS = {
@@ -42,6 +42,8 @@ function AppContent() {
   const [courses, setCourses] = useState<Course[]>(getInitialCourses);
   // 当前选中的课程
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  // 评价页面模式：view（查看）、edit（编辑/新建）
+  const [evaluationMode, setEvaluationMode] = useState<'view' | 'edit'>('edit');
 
   // 同步用户状态到 localStorage
   useEffect(() => {
@@ -79,23 +81,57 @@ function AppContent() {
     message.success('已成功退出登录');
   };
 
-  // 选择课程进行评价
+  // 选择课程进行评价或查看
   const handleSelectCourse = (course: Course) => {
     setSelectedCourse(course);
+    setEvaluationMode(course.evaluated ? 'view' : 'edit');
   };
 
   // 返回课程列表
   const handleBack = () => {
     setSelectedCourse(null);
+    setEvaluationMode('edit');
   };
 
-  // 评价提交成功后更新课程状态
-  const handleSubmitSuccess = (courseId: string) => {
+  // 进入修改评价模式
+  const handleEditEvaluation = () => {
+    setEvaluationMode('edit');
+  };
+
+  // 取消编辑
+  const handleCancelEdit = () => {
+    if (selectedCourse?.evaluated) {
+      setEvaluationMode('view');
+    } else {
+      setSelectedCourse(null);
+      setEvaluationMode('edit');
+    }
+  };
+
+  // 评价提交成功后更新课程状态和评价数据
+  const handleSubmitSuccess = (courseId: string, evaluationData: EvaluationData) => {
+    const newEvaluationData = {
+      ...evaluationData,
+      submittedAt: new Date().toISOString(),
+    };
+    
     setCourses(prevCourses =>
       prevCourses.map(course =>
-        course.id === courseId ? { ...course, evaluated: true } : course
+        course.id === courseId
+          ? { ...course, evaluated: true, evaluationData: newEvaluationData }
+          : course
       )
     );
+    
+    if (selectedCourse && selectedCourse.id === courseId) {
+      setSelectedCourse({
+        ...selectedCourse,
+        evaluated: true,
+        evaluationData: newEvaluationData,
+      });
+    }
+    
+    setEvaluationMode('view');
   };
 
   return user ? (
@@ -103,7 +139,10 @@ function AppContent() {
       {selectedCourse ? (
         <EvaluationPage
           course={selectedCourse}
+          mode={evaluationMode}
           onBack={handleBack}
+          onEdit={handleEditEvaluation}
+          onCancelEdit={handleCancelEdit}
           onSubmitSuccess={handleSubmitSuccess}
         />
       ) : (
