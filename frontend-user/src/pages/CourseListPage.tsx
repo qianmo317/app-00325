@@ -74,8 +74,8 @@ const CourseListPage: React.FC<CourseListPageProps> = ({ courses, onSelectCourse
               >
                 <Card
                   className={`course-card ${course.evaluated ? 'evaluated' : ''}`}
-                  hoverable={!course.evaluated}
-                  onClick={() => !course.evaluated && onSelectCourse(course)}
+                  hoverable
+                  onClick={() => onSelectCourse(course)}
                 >
                   <div className="course-card-content">
                     {/* 课程基本信息 */}
@@ -115,11 +115,11 @@ const CourseListPage: React.FC<CourseListPageProps> = ({ courses, onSelectCourse
                     </div>
 
                     {/* 操作按钮 */}
-                    {!course.evaluated && (
-                      <div className="course-action">
-                        <span className="action-text">点击进行评价 →</span>
-                      </div>
-                    )}
+                    <div className="course-action">
+                      <span className="action-text">
+                        {course.evaluated ? '点击查看评价 →' : '点击进行评价 →'}
+                      </span>
+                    </div>
                   </div>
                 </Card>
               </Badge.Ribbon>
